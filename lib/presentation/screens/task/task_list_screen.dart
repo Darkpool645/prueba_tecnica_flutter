@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:prueba_examen/data/models/task_model.dart';
 import 'package:prueba_examen/presentation/screens/task/task_edit_screen.dart';
 import '../../cubits/task_cubit.dart';
 import '../../cubits/task_state.dart';
@@ -26,14 +27,25 @@ class TaskListScreen extends StatelessWidget {
                 return ListTile(
                   title: Text(task.title),
                   subtitle: Text(task.description),
-                  trailing: IconButton(
-                    icon: Icon(
-                        task.isCompleted ? Icons.check_circle : Icons.circle,
-                        color: task.isCompleted ? Colors.green : Colors.grey
-                    ),
-                    onPressed: () {
-                      context.read<TaskCubit>().toggleTaskCompletion(task);
-                    },
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          task.isCompleted ? Icons.check_circle : Icons.circle,
+                          color: task.isCompleted ? Colors.green : Colors.grey,
+                        ),
+                        onPressed: () {
+                          context.read<TaskCubit>().toggleTaskCompletion(task);
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          _confirmDelete(context, task);
+                        },
+                      ),
+                    ],
                   ),
                   onTap: () {
                     Navigator.of(context).push(
@@ -59,6 +71,31 @@ class TaskListScreen extends StatelessWidget {
         },
         child: const Icon(Icons.add),
       ),
+    );
+  }
+
+  void _confirmDelete(BuildContext context, Task task) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirmar eliminación'),
+        content: const Text('Estas seguro de que quieres eliminar esta tarea?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancelar')
+          ),
+          TextButton(
+            onPressed: () {
+              context.read<TaskCubit>().deleteTask(task.id);
+              Navigator.of(context).pop();
+            },
+            child: const Text('Eliminar', style: TextStyle(color: Colors.red)),
+          )
+        ]
+      )
     );
   }
 }

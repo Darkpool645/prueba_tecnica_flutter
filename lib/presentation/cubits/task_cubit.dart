@@ -47,4 +47,13 @@ class TaskCubit extends Cubit<TaskState> {
       emit(TaskError(message: e.toString()));
     }
   }
+
+  void deleteTask(int id) {
+    try{
+      taskRepository.deleteTask(id);
+      fetchTasks();
+    } catch (e) {
+      emit(TaskError(message: e.toString()));
+    }
+  }
 }
