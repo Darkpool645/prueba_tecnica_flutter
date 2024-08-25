@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:prueba_examen/presentation/screens/task/task_edit_screen.dart';
 import '../../cubits/task_cubit.dart';
 import '../../cubits/task_state.dart';
 import 'task_form_screen.dart';
@@ -25,12 +26,20 @@ class TaskListScreen extends StatelessWidget {
                 return ListTile(
                   title: Text(task.title),
                   subtitle: Text(task.description),
-                  trailing: Icon(
-                    task.isCompleted ? Icons.check_circle : Icons.circle,
-                    color: task.isCompleted ? Colors.green : Colors.grey
+                  trailing: IconButton(
+                    icon: Icon(
+                        task.isCompleted ? Icons.check_circle : Icons.circle,
+                        color: task.isCompleted ? Colors.green : Colors.grey
+                    ),
+                    onPressed: () {
+                      context.read<TaskCubit>().toggleTaskCompletion(task);
+                    },
                   ),
                   onTap: () {
-
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => TaskEditScreen(task: task)),
+                    );
                   },
                 );
               },
