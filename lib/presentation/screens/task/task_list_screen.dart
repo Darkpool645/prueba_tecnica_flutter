@@ -42,7 +42,14 @@ class TaskListScreen extends StatelessWidget {
           }
         }
       ),
-
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const TaskFormScreen())
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
